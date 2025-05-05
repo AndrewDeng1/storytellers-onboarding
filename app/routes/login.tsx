@@ -38,17 +38,27 @@ export async function action({ request }: ActionFunctionArgs) {
       email,
       password,
       options: {
-        emailRedirectTo: `${request.url}/auth/callback`,
+        emailRedirectTo: `${new URL(request.url).origin}/auth/callback`,
+        data: {
+          site_name: "TaskMaster",
+        }
       },
     });
 
     if (error) {
+      if (error.message.includes("already registered") || error.message.includes("already exists")) {
+        return json<ActionData>({ error: "An account with this email already exists" });
+      }
       return json<ActionData>({ error: error.message });
+    }
+
+    if (data.user && !data.user.identities?.length) {
+      return json<ActionData>({ error: "An account with this email already exists" });
     }
 
     if (data.user) {
       return json<ActionData>({ 
-        message: "Check your email for the confirmation link"
+        message: "Please check your email for a confirmation link to get started with TaskMaster"
       });
     }
   }
@@ -66,7 +76,7 @@ export default function Login() {
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome to TaskMaster</h1>
             <p className="text-gray-500">Sign in to manage your tasks</p>
           </div>
 

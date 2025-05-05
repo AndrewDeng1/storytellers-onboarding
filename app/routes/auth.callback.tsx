@@ -12,7 +12,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     await supabase.auth.exchangeCodeForSession(code);
   }
 
-  return redirect("/", {
+  return redirect("/auth/confirmation", {
     headers: response.headers,
   });
 } 
