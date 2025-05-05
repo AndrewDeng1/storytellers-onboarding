@@ -39,6 +39,7 @@ export async function action({ request }: ActionFunctionArgs) {
       password,
       options: {
         emailRedirectTo: `${new URL(request.url).origin}/auth/callback`,
+        // emailRedirectTo: `${new URL(request.url).origin}/auth/callback`,
         data: {
           site_name: "TaskMaster",
         }
