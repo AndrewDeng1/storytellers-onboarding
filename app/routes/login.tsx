@@ -38,8 +38,9 @@ export async function action({ request }: ActionFunctionArgs) {
       email,
       password,
       options: {
-        emailRedirectTo: `${new URL(request.url).origin}/auth/callback`,
-        // emailRedirectTo: `${new URL(request.url).origin}/auth/callback`,
+        emailRedirectTo: process.env.NODE_ENV === "production" 
+           ? "https://storytellers-onboarding.vercel.app/auth/callback"
+           : `${new URL(request.url).origin}/auth/callback`,
         data: {
           site_name: "TaskMaster",
         }
